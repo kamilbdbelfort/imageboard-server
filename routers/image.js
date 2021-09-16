@@ -11,7 +11,7 @@ router.get("/:imageId", async (req, res, next) => {
     const id = req.params.imageId;
     console.log("id:", id);
     const getImage = await Image.findByPk(id);
-    res.send(getImage["url"]);
+    res.send(getImage);
   } catch (e) {
     next(e);
   }
@@ -32,18 +32,19 @@ router.post("/", async (req, res, next) => {
   try {
     const title = req.body.title;
     const url = req.body.url;
+    let warningImages = "";
     if (!title || !url) {
-      let warning = "";
       if (!title && !url) {
-        warning = "title & url";
+        warningImages = "title & url";
+        return warningImages;
       } else if (!title) {
-        warning = "title";
-        return warning;
+        warningImages = "title";
+        return warningImages;
       } else if (!url) {
-        warning = "url";
-        return warning;
+        warningImages = "url";
+        return warningImages;
       }
-      res.status(400).send(`Must provide: ${warning} `);
+      res.status(400).send(`Must provide: ${warningImages} `);
     } else {
       const newImage = await Image.create({
         title,
